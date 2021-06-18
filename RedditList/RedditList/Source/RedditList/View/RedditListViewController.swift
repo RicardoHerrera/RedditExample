@@ -10,6 +10,15 @@ import UIKit
 
 class RedditListViewController: UIViewController {
 
+    // MARK: - IBOutlets
+    @IBOutlet weak var tableView: UITableView!
+    @IBOutlet weak var activityIndicator: UIActivityIndicatorView! {
+        didSet {
+            activityIndicator.isHidden = true
+        }
+    }
+
+    // MARK: - properties
     var presenter: RedditListPresenterProtocol?
 
     override func viewDidLoad() {
