@@ -19,13 +19,27 @@ class RedditListViewController: UIViewController {
     }
 
     // MARK: - properties
-    var presenter: RedditListPresenterProtocol?
+    var presenter: RedditListPresenterProtocol? = RedditListPresenter()
+    var refreshControl = UIRefreshControl()
 
+    // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
+        refreshControl.tintColor = .red
+        refreshControl.addTarget(self, action: #selector(pullToRefres(refreshControl:)), for: UIControl.Event.valueChanged)
+        tableView.addSubview(refreshControl)
+        presenter!.getTop50()
     }
 
+    // MARK: - UserInteraction
+
+    @objc func pullToRefres(refreshControl: UIRefreshControl) {
+        guard let presenter = self.presenter else { return }
+        presenter.restartPagination()
+        presenter.getTop50()
+        
+    }
 
 }
 
