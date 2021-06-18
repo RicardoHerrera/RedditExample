@@ -9,11 +9,10 @@
 import Foundation
 
 protocol RedditListPresenterProtocol {
-    func getTop50()// make async with completion
-    func getNextPage(page: Int) -> [String]
+    func getNewPage()
     func deleteItems(idList: [String])
     func restartPagination()
-    var postsToShow: [Posts] { get }
+    var postsToShow: [Post] { get }
 }
 
 class RedditListPresenter: RedditListPresenterProtocol {
@@ -21,8 +20,8 @@ class RedditListPresenter: RedditListPresenterProtocol {
     let networker: RedditListNetworkerProtocol
     let storage: RedditStorageProtocol
     weak var viewcontroller: RedditListViewControllerProtocol?
-    var postsToShow: [Posts] = []
-    var paging = 10
+    var postsToShow: [Post] = []
+    var paging = 2
     var currentPage = 0
 
     init(networker: RedditListNetworkerProtocol = RedditListNetworker(),
@@ -33,9 +32,9 @@ class RedditListPresenter: RedditListPresenterProtocol {
         self.viewcontroller = viewController
     }
 
-    func getTop50() {
+    func getNewPage() {
         viewcontroller?.showLoading()
-        networker.getTop { [weak self] (posts, error) in
+        networker.getTop(limit: paging) { [weak self] (posts, error) in
             guard let self = self else { return }
             guard error == nil,
                 let posts = posts else {
@@ -46,7 +45,8 @@ class RedditListPresenter: RedditListPresenterProtocol {
             }
             // Filter posts with deleted ones
             let deletedPosts = self.storage.getDeletedPosts()
-            self.postsToShow = posts.filter( { !deletedPosts.contains($0.info.postId) } )
+            let filtered = posts.filter( { !deletedPosts.contains($0.info.postId) } )
+            self.postsToShow.append(contentsOf: filtered.map( { $0.info } ))
             DispatchQueue.main.async {
                 //Stop loading
                 self.viewcontroller?.hideLoading()
@@ -55,17 +55,13 @@ class RedditListPresenter: RedditListPresenterProtocol {
             }
         }
     }
-    
-    func getNextPage(page: Int) -> [String] {
-        // page = 1
-
-        return []//postsToShow[currentPage..currentPage + paging]
-    }
 
     func deleteItems(idList: [String]) {
     }
 
     func restartPagination() {
+        networker.resetPagination()
         currentPage = 0
+        postsToShow = []
     }
 }

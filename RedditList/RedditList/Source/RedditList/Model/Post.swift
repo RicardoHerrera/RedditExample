@@ -71,3 +71,9 @@ struct Post: Decodable {
         return formatter.localizedString(for: date, relativeTo: Date())
     }
 }
+
+extension Post: Hashable {
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(postId)
+    }
+}
