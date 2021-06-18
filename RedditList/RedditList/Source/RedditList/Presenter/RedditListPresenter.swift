@@ -19,27 +19,40 @@ class RedditListPresenter: RedditListPresenterProtocol {
 
     let networker: RedditListNetworkerProtocol
     let storage: RedditStorageProtocol
-    var postsToShow = [Post]()
+    weak var viewcontroller: RedditListViewControllerProtocol?
+    var postsToShow = [Posts]()
     var paging = 10
     var currentPage = 0
 
     init(networker: RedditListNetworkerProtocol = RedditListNetworker(),
-         storage: RedditStorageProtocol = RedditStorage()) {
+         storage: RedditStorageProtocol = RedditStorage(),
+         viewController: RedditListViewControllerProtocol) {
         self.networker = networker
         self.storage = storage
+        self.viewcontroller = viewController
     }
 
     func getTop50() {
+        viewcontroller?.showLoading()
         networker.getTop { [weak self] (posts, error) in
-            guard error == nil else {
+            guard let self = self else { return }
+            guard error == nil,
+                let posts = posts else {
                 // Show error in VC
+                    self.viewcontroller?.showMessage(title: "Error",
+                                                     message: error?.localizedDescription ?? "Ocurrió un error")
                 return
             }
-            guard let self = self else { return }
             // Filter posts with deleted ones
             let deletedPosts = self.storage.getDeletedPosts()
-            let filtered = posts?.filter( { !deletedPosts.contains($0.info.postId) } )
-            // Reload table view with posts
+            self.postsToShow = posts.filter( { !deletedPosts.contains($0.info.postId) } )
+            DispatchQueue.main.async {
+                //Stop loading
+                self.viewcontroller?.hideLoading()
+                // Reload table view with posts
+                self.viewcontroller?.showMessage(title: "Éxito",
+                message: "Se trajeron los datos!!")
+            }
         }
     }
     
