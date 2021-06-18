@@ -15,8 +15,9 @@ enum StorageKeys: String {
 
 protocol RedditStorageProtocol { // Use user defaults
     func saveDeletedPost(postId: String)
-    func getReadPosts() -> [String]
-    func getDeletedPosts() -> [String]
+    func saveReadPost(postId: String)
+    func getReadPosts() -> Set<String>
+    func getDeletedPosts() -> Set<String>
     func isPostRead(postId: String) -> Bool
 }
 
@@ -32,22 +33,22 @@ class RedditStorage: RedditStorageProtocol {
 
     func saveInUserDefaults(postId: String, for key: StorageKeys) {
         let userDefaults = UserDefaults.standard
-        var deletedPosts: [String] = userDefaults.object(forKey: key.rawValue) as? [String] ?? [String]()
-        deletedPosts.append(postId)
-        userDefaults.set(deletedPosts, forKey: key.rawValue)
+        var posts: Set<String> = Set<String>(userDefaults.object(forKey: key.rawValue) as? [String] ?? [])
+        posts.insert(postId)
+        userDefaults.set(Array(posts), forKey: key.rawValue)
     }
 
-    func getReadPosts() -> [String] {
+    func getReadPosts() -> Set<String> {
         return getObjectFromUserDefaults(for: .read)
     }
 
-    func getDeletedPosts() -> [String] {
+    func getDeletedPosts() -> Set<String> {
         return getObjectFromUserDefaults(for: .deleted)
     }
 
-    func getObjectFromUserDefaults(for key: StorageKeys) -> [String] {
+    func getObjectFromUserDefaults(for key: StorageKeys) -> Set<String> {
         let userDefaults = UserDefaults.standard
-        return userDefaults.object(forKey: key.rawValue) as? [String] ?? [String]()
+        return Set<String>(userDefaults.object(forKey: key.rawValue) as? [String] ?? [])
     }
 
     func isPostRead(postId: String) -> Bool {

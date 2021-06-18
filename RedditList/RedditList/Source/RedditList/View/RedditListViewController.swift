@@ -65,6 +65,12 @@ class RedditListViewController: UIViewController {
                 fatalError("Error loading cell")
             }
             cell.setupFor(post)
+            cell.selectionStyle = .none
+            if self.presenter?.isPostRead(postId: post.postId) ?? false {
+                cell.contentView.backgroundColor = .white
+            } else {
+                cell.contentView.backgroundColor = .magenta
+            }
             return cell
         })
     }
@@ -125,7 +131,10 @@ extension RedditListViewController: UITableViewDelegate {
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-        guard let post = datasource.itemIdentifier(for: indexPath) else { return }
-        print("Make post read: \(post.title)")
+        let cell = tableView.cellForRow(at: indexPath)
+        cell?.contentView.backgroundColor = .white
+        guard let post = datasource.itemIdentifier(for: indexPath),
+            let presenter = self.presenter else { return }
+        presenter.markAsRead(postId: post.postId)
     }
 }
