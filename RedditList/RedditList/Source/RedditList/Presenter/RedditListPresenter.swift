@@ -51,8 +51,6 @@ class RedditListPresenter: RedditListPresenterProtocol {
                 //Stop loading
                 self.viewcontroller?.hideLoading()
                 // Reload table view with posts
-                self.viewcontroller?.showMessage(title: "Éxito",
-                message: "Se trajeron los datos!!")
                 self.viewcontroller?.updateList()
             }
         }
