@@ -8,14 +8,56 @@
 
 import Foundation
 
-struct Post { //Mappable
-    
+struct TopList: Decodable {
+    let after: String?
+    let posts: [Posts]
+
+    enum ContainerKeys: String, CodingKey {
+        case data
+    }
+
+    enum DataKeys: String, CodingKey {
+        case after
+        case children
+    }
+
+    // MARK: - init with decoder
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: ContainerKeys.self)
+        let data = try container.nestedContainer(keyedBy: DataKeys.self,
+                                                 forKey: .data)
+        posts = try data.decode([Posts].self, forKey: .children)
+        after = try? data.decode(String.self, forKey: .after)
+    }
+}
+
+struct Posts: Decodable {
+    let info: Post
+
+    enum CodingKeys: String, CodingKey {
+        case info = "data"
+    }
+}
+
+struct Post: Decodable {
+
+    let postId: String
     var author: String
     var comments: Int
     var thumbnailURL: String
     var fullImageURL: String
     var isVideo: Bool
     var timeStamp: Double
+
+    enum CodingKeys: String, CodingKey {
+        case postId = "name"
+        case comments = "num_comments"
+        case thumbnailURL = "thumbnail"
+        case fullImageURL = "url"
+        case isVideo = "is_video"
+        case timeStamp = "created"
+        case author
+    }
     
     func date() -> String {
         let date: Date = Date(timeIntervalSince1970: timeStamp)
