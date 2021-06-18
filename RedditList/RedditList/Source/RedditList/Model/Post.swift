@@ -42,12 +42,13 @@ struct Posts: Decodable {
 struct Post: Decodable {
 
     let postId: String
-    var author: String
-    var comments: Int
-    var thumbnailURL: String
-    var fullImageURL: String
-    var isVideo: Bool
-    var timeStamp: Double
+    let title: String
+    let author: String
+    let comments: Int
+    let thumbnailURL: String
+    let fullImageURL: String
+    let isVideo: Bool
+    let timeStamp: Double
 
     enum CodingKeys: String, CodingKey {
         case postId = "name"
@@ -56,7 +57,7 @@ struct Post: Decodable {
         case fullImageURL = "url"
         case isVideo = "is_video"
         case timeStamp = "created"
-        case author
+        case author, title
     }
     
     func date() -> String {

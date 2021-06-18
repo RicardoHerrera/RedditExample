@@ -13,6 +13,7 @@ protocol RedditListPresenterProtocol {
     func getNextPage(page: Int) -> [String]
     func deleteItems(idList: [String])
     func restartPagination()
+    var postsToShow: [Posts] { get }
 }
 
 class RedditListPresenter: RedditListPresenterProtocol {
@@ -20,7 +21,7 @@ class RedditListPresenter: RedditListPresenterProtocol {
     let networker: RedditListNetworkerProtocol
     let storage: RedditStorageProtocol
     weak var viewcontroller: RedditListViewControllerProtocol?
-    var postsToShow = [Posts]()
+    var postsToShow: [Posts] = []
     var paging = 10
     var currentPage = 0
 
@@ -52,6 +53,7 @@ class RedditListPresenter: RedditListPresenterProtocol {
                 // Reload table view with posts
                 self.viewcontroller?.showMessage(title: "Éxito",
                 message: "Se trajeron los datos!!")
+                self.viewcontroller?.updateList()
             }
         }
     }
