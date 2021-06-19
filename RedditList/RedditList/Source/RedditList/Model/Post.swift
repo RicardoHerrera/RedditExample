@@ -60,6 +60,19 @@ struct Post: Decodable {
         case timeStamp = "created"
         case author, title
     }
+
+    init(postId: String = "", title: String = "", author: String = "",
+         comments: Int = 1, thumbnailURL: String = "",
+         fullImageURL: String = "", isVideo: Bool = true, timeStamp: Double = 1624033363.0) {
+        self.postId = postId
+        self.title = title
+        self.author = author
+        self.comments = comments
+        self.thumbnailURL = thumbnailURL
+        self.fullImageURL = fullImageURL
+        self.isVideo = isVideo
+        self.timeStamp = timeStamp
+    }
     
     func date() -> String {
         let date: Date = Date(timeIntervalSince1970: timeStamp)

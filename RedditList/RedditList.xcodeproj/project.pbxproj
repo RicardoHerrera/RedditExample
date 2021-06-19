@@ -15,6 +15,7 @@
 		C51FD7BF267B1966005F4F17 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C51FD7BD267B1966005F4F17 /* LaunchScreen.storyboard */; };
 		C51FD7CA267B1966005F4F17 /* RedditListTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C51FD7C9267B1966005F4F17 /* RedditListTests.swift */; };
 		C51FD7D8267B19D5005F4F17 /* Post.swift in Sources */ = {isa = PBXBuildFile; fileRef = C51FD7D7267B19D5005F4F17 /* Post.swift */; };
+		C52FBBEF267DC5670010BEF4 /* RedditListPresenterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C52FBBEE267DC5670010BEF4 /* RedditListPresenterTests.swift */; };
 		C545EAD1267B1DFD00B60475 /* RedditListPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = C545EAD0267B1DFD00B60475 /* RedditListPresenter.swift */; };
 		C5937710267D75EA00F78EAE /* PostDiffableDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = C593770F267D75EA00F78EAE /* PostDiffableDataSource.swift */; };
 		C5937712267D95E600F78EAE /* ImageCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5937711267D95E600F78EAE /* ImageCache.swift */; };
@@ -48,6 +49,7 @@
 		C51FD7C9267B1966005F4F17 /* RedditListTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RedditListTests.swift; sourceTree = "<group>"; };
 		C51FD7CB267B1966005F4F17 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		C51FD7D7267B19D5005F4F17 /* Post.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Post.swift; sourceTree = "<group>"; };
+		C52FBBEE267DC5670010BEF4 /* RedditListPresenterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RedditListPresenterTests.swift; sourceTree = "<group>"; };
 		C545EAD0267B1DFD00B60475 /* RedditListPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RedditListPresenter.swift; sourceTree = "<group>"; };
 		C593770F267D75EA00F78EAE /* PostDiffableDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostDiffableDataSource.swift; sourceTree = "<group>"; };
 		C5937711267D95E600F78EAE /* ImageCache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCache.swift; sourceTree = "<group>"; };
@@ -112,6 +114,7 @@
 			children = (
 				C51FD7C9267B1966005F4F17 /* RedditListTests.swift */,
 				C51FD7CB267B1966005F4F17 /* Info.plist */,
+				C52FBBEE267DC5670010BEF4 /* RedditListPresenterTests.swift */,
 			);
 			path = RedditListTests;
 			sourceTree = "<group>";
@@ -310,6 +313,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C52FBBEF267DC5670010BEF4 /* RedditListPresenterTests.swift in Sources */,
 				C51FD7CA267B1966005F4F17 /* RedditListTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
