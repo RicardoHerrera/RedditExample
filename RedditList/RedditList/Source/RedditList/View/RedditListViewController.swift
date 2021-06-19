@@ -13,6 +13,7 @@ protocol RedditListViewControllerProtocol: class {
     func hideLoading()
     func updateList()
     func showMessage(title: String, message: String)
+    func deletePost(at index: Int)
 }
 
 class RedditListViewController: UIViewController {
@@ -29,7 +30,7 @@ class RedditListViewController: UIViewController {
     // MARK: - properties
     var presenter: RedditListPresenterProtocol?
     var refreshControl = UIRefreshControl()
-    var datasource: UITableViewDiffableDataSource<Int, Post>!
+    var datasource: PostDiffableDataSource!
 
     // MARK: - Lifecycle
     override func viewDidLoad() {
@@ -54,11 +55,14 @@ class RedditListViewController: UIViewController {
 
     private func configureTableView() {
         tableView.delegate = self
+        // Handle cell config
         let postTableViewCell = UINib(nibName: "PostTableViewCell",
                                       bundle: nil)
         tableView.register(postTableViewCell,
                            forCellReuseIdentifier: PostTableViewCell.identifier())
-        datasource = UITableViewDiffableDataSource(tableView: tableView,
+        tableView.rowHeight = UITableView.automaticDimension
+        // Handle datasource
+        datasource = PostDiffableDataSource(tableView: tableView,
                                                    cellProvider: { (tableView, indexPath, post) -> UITableViewCell? in
             guard let cell = tableView.dequeueReusableCell(withIdentifier: PostTableViewCell.identifier()) as? PostTableViewCell
                 else {
@@ -73,6 +77,8 @@ class RedditListViewController: UIViewController {
             }
             return cell
         })
+        // TODO: Find a better name e.g. uidelegate vcdelegate (?) argh..
+        datasource.delegate = self
     }
 
     private func updateDatasourcer() {
@@ -94,9 +100,7 @@ class RedditListViewController: UIViewController {
 
     @objc func didTapRemoveAll() {
         // Call presenter make all current items locally deleted
-        print("All removed :)")
-        // TODO: fix fake pagination
-        presenter?.getNewPage()
+        presenter?.deleteAllPosts()
     }
 }
 
@@ -125,6 +129,11 @@ extension RedditListViewController: RedditListViewControllerProtocol {
         alert.addAction(cancel)
         present(alert, animated: true)
     }
+
+    func deletePost(at index: Int) {
+        guard let presenter = self.presenter else { return }
+        presenter.deletePost(at: index)
+    }
 }
 
 extension RedditListViewController: UITableViewDelegate {
@@ -136,5 +145,26 @@ extension RedditListViewController: UITableViewDelegate {
         guard let post = datasource.itemIdentifier(for: indexPath),
             let presenter = self.presenter else { return }
         presenter.markAsRead(postId: post.postId)
+    }
+}
+
+// TODO: Move to new file
+class PostDiffableDataSource: UITableViewDiffableDataSource<Int, Post> {
+
+    weak var delegate: RedditListViewControllerProtocol?
+
+    override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
+        return true
+    }
+
+    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+        if editingStyle == .delete {
+            var snapshot = self.snapshot()
+            if let post = itemIdentifier(for: indexPath) {
+                snapshot.deleteItems([post])
+                apply(snapshot, animatingDifferences: true)
+                delegate?.deletePost(at: indexPath.row)
+            }
+        }
     }
 }

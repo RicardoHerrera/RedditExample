@@ -10,7 +10,7 @@ import Foundation
 
 protocol RedditListPresenterProtocol {
     func getNewPage()
-    func deletePost(postId: String)
+    func deletePost(at index: Int)
     func deleteAllPosts()
     func markAsRead(postId: String)
     func isPostRead(postId: String) -> Bool
@@ -59,14 +59,19 @@ class RedditListPresenter: RedditListPresenterProtocol {
         }
     }
 
-    func deletePost(postId: String) {
-        storage.saveDeletedPost(postId: postId)
+    func deletePost(at index: Int) {
+        let post = postsToShow[index]
+        storage.saveDeletedPost(postId: post.postId)
+        postsToShow.remove(at: index)
+        viewcontroller?.updateList()
     }
 
     func deleteAllPosts() {
         for post in postsToShow {
-            deletePost(postId: post.postId)
+            storage.saveDeletedPost(postId: post.postId)
         }
+        postsToShow.removeAll()
+        viewcontroller?.updateList()
     }
 
     func markAsRead(postId: String) {
@@ -79,6 +84,7 @@ class RedditListPresenter: RedditListPresenterProtocol {
 
     func restartPagination() {
         networker.resetPagination()
+        storage.resetDeletedPosts()
         currentPage = 0
         postsToShow = []
     }

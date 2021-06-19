@@ -19,6 +19,7 @@ protocol RedditStorageProtocol { // Use user defaults
     func getReadPosts() -> Set<String>
     func getDeletedPosts() -> Set<String>
     func isPostRead(postId: String) -> Bool
+    func resetDeletedPosts()
 }
 
 class RedditStorage: RedditStorageProtocol {
@@ -31,7 +32,7 @@ class RedditStorage: RedditStorageProtocol {
         saveInUserDefaults(postId: postId, for: .read)
     }
 
-    func saveInUserDefaults(postId: String, for key: StorageKeys) {
+    private func saveInUserDefaults(postId: String, for key: StorageKeys) {
         let userDefaults = UserDefaults.standard
         var posts: Set<String> = Set<String>(userDefaults.object(forKey: key.rawValue) as? [String] ?? [])
         posts.insert(postId)
@@ -46,7 +47,7 @@ class RedditStorage: RedditStorageProtocol {
         return getObjectFromUserDefaults(for: .deleted)
     }
 
-    func getObjectFromUserDefaults(for key: StorageKeys) -> Set<String> {
+    private func getObjectFromUserDefaults(for key: StorageKeys) -> Set<String> {
         let userDefaults = UserDefaults.standard
         return Set<String>(userDefaults.object(forKey: key.rawValue) as? [String] ?? [])
     }
@@ -57,5 +58,9 @@ class RedditStorage: RedditStorageProtocol {
         return posts.contains(postId)
     }
 
+    func resetDeletedPosts() {
+        let userDefaults = UserDefaults.standard
+        userDefaults.set([], forKey: StorageKeys.deleted.rawValue)
+    }
 }
 
