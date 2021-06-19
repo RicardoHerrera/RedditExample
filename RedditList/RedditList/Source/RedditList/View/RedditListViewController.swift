@@ -24,6 +24,7 @@ class RedditListViewController: UIViewController {
         didSet {
             activityIndicator.hidesWhenStopped = true
             activityIndicator.isHidden = true
+            activityIndicator.style = .large
         }
     }
 
