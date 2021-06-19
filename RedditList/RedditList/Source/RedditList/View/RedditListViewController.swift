@@ -42,10 +42,13 @@ class RedditListViewController: UIViewController {
 
     // MKAR: - ConfigureView
     private func configureView() {
+        // Pull to refresh
         refreshControl.tintColor = .red
         refreshControl.addTarget(self, action: #selector(pullToRefres(refreshControl:)), for: UIControl.Event.valueChanged)
         tableView.addSubview(refreshControl)
         configureTableView()
+        // Title
+        title = "Reddit - Top 50"
         // Delete all
         navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "trash.fill"),
                                                             style: .plain,
@@ -136,6 +139,7 @@ extension RedditListViewController: RedditListViewControllerProtocol {
     }
 }
 
+// MARK: - UITableViewDelegate
 extension RedditListViewController: UITableViewDelegate {
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
@@ -145,26 +149,5 @@ extension RedditListViewController: UITableViewDelegate {
         guard let post = datasource.itemIdentifier(for: indexPath),
             let presenter = self.presenter else { return }
         presenter.markAsRead(postId: post.postId)
-    }
-}
-
-// TODO: Move to new file
-class PostDiffableDataSource: UITableViewDiffableDataSource<Int, Post> {
-
-    weak var delegate: RedditListViewControllerProtocol?
-
-    override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
-        return true
-    }
-
-    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
-        if editingStyle == .delete {
-            var snapshot = self.snapshot()
-            if let post = itemIdentifier(for: indexPath) {
-                snapshot.deleteItems([post])
-                apply(snapshot, animatingDifferences: true)
-                delegate?.deletePost(at: indexPath.row)
-            }
-        }
     }
 }
