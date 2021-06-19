@@ -15,12 +15,23 @@ protocol RedditListNetworkerProtocol {
 
 class RedditListNetworker: RedditListNetworkerProtocol {
 
-    var after: String = ""
-    var count = 0
+    private var after: String = ""
+    private var count = 0
+    private var maxTop = 50
 
     func getTop(limit: Int = 10, completioHandler: @escaping (_ posts: [Posts]?, _ error: Error?) -> Void) {
+        guard count < 50 else {
+            let customError = NSError(domain: "Reddit", code: 888,
+                                      userInfo: [ NSLocalizedDescriptionKey: "Top 50 reached"])
+            completioHandler(nil, customError)
+            return
+        }
+
+        let maxLeftPosts = maxTop - count
+        let finalLimit = min(maxLeftPosts, limit)
+
         var url = "https://www.reddit.com/top/.json"
-        url += "?limit=\(limit)"
+        url += "?limit=\(finalLimit)"
         if !after.isEmpty { url += "&after=\(after)" }
         var request = URLRequest(url: URL(string: url)!)
         request.httpMethod = "GET"
