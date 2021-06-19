@@ -42,8 +42,11 @@ class RedditListPresenter: RedditListPresenterProtocol {
             guard error == nil,
                 let posts = posts else {
                 // Show error in VC
-                    self.viewcontroller?.showMessage(title: "Error",
-                                                     message: error?.localizedDescription ?? "Ocurrió un error")
+                    DispatchQueue.main.async {
+                        self.viewcontroller?.hideLoading()
+                        self.viewcontroller?.showMessage(title: "Error",
+                        message: error?.localizedDescription ?? "Ocurrió un error")
+                    }
                 return
             }
             // Filter posts with deleted ones
