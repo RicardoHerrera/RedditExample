@@ -66,7 +66,8 @@ class RedditListViewController: UIViewController {
         tableView.rowHeight = UITableView.automaticDimension
         // Handle datasource
         datasource = PostDiffableDataSource(tableView: tableView,
-                                                   cellProvider: { (tableView, indexPath, post) -> UITableViewCell? in
+                                            cellProvider: { [weak self] (tableView, indexPath, post) -> UITableViewCell? in
+            guard let self = self else { fatalError("View controller doesn't exists")}
             guard let cell = tableView.dequeueReusableCell(withIdentifier: PostTableViewCell.identifier()) as? PostTableViewCell
                 else {
                 fatalError("Error loading cell")
@@ -149,5 +150,14 @@ extension RedditListViewController: UITableViewDelegate {
         guard let post = datasource.itemIdentifier(for: indexPath),
             let presenter = self.presenter else { return }
         presenter.markAsRead(postId: post.postId)
+    }
+
+    func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
+        let currentOffset = scrollView.contentOffset.y
+        let maxOffset = scrollView.contentSize.height - scrollView.frame.size.height
+
+        if maxOffset - currentOffset <= 10.0 {
+            presenter?.getNewPage()
+        }
     }
 }
