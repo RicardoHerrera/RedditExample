@@ -8,8 +8,15 @@
 
 import Foundation
 
+enum NetworkError: Error {
+    case failWith(_ error: Error?)
+    case badURL
+    case maxPostReached
+    case invalidResponse
+}
+
 protocol RedditListNetworkerProtocol {
-    func getTop(limit: Int, completioHandler: @escaping (_ posts: [Posts]?, _ error: Error?) -> Void)
+    func getTop(limit: Int, completioHandler: @escaping (Result<[Posts]?, NetworkError>) -> Void)
     func resetPagination()
 }
 
@@ -19,11 +26,9 @@ class RedditListNetworker: RedditListNetworkerProtocol {
     private var count = 0
     private var maxTop = 50
 
-    func getTop(limit: Int = 10, completioHandler: @escaping (_ posts: [Posts]?, _ error: Error?) -> Void) {
+    func getTop(limit: Int = 10, completioHandler: @escaping (Result<[Posts]?, NetworkError>) -> Void) {
         guard count < 50 else {
-            let customError = NSError(domain: "Reddit", code: 888,
-                                      userInfo: [ NSLocalizedDescriptionKey: "Top 50 reached"])
-            completioHandler(nil, customError)
+            completioHandler(.failure(.maxPostReached))
             return
         }
 
@@ -40,7 +45,7 @@ class RedditListNetworker: RedditListNetworkerProtocol {
                 let data = data,
                 let response = response as? HTTPURLResponse,
                 (200 ..< 299) ~= response.statusCode else {
-                completioHandler(nil, error)
+                    completioHandler(.failure(.failWith(error)))
                 return
             }
 
@@ -49,13 +54,11 @@ class RedditListNetworker: RedditListNetworkerProtocol {
                 self?.after = topList.after ?? ""
                 let posts = topList.posts
                 self?.count += posts.count
-                completioHandler(posts, nil)
+                completioHandler(.success(posts))
                 // everything is good, so we can exit
                 return
             } else {
-                let customError = NSError(domain: "", code: 999,
-                                          userInfo: [ NSLocalizedDescriptionKey: "Invalid JSon"])
-                completioHandler(nil, customError)
+                completioHandler(.failure(.invalidResponse))
                 return
             }
         }.resume()
