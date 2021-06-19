@@ -111,8 +111,8 @@ class RedditListViewController: UIViewController {
 // MARK: - RedditListViewControllerProtocol
 extension RedditListViewController: RedditListViewControllerProtocol {
     func showLoading() {
-        activityIndicator.isHidden = false
         activityIndicator.startAnimating()
+        activityIndicator.isHidden = refreshControl.isRefreshing
     }
 
     func hideLoading() {
@@ -156,7 +156,7 @@ extension RedditListViewController: UITableViewDelegate {
         let currentOffset = scrollView.contentOffset.y
         let maxOffset = scrollView.contentSize.height - scrollView.frame.size.height
 
-        if maxOffset - currentOffset <= 10.0 {
+        if maxOffset - currentOffset <= 10.0 && !refreshControl.isRefreshing {
             presenter?.getNewPage()
         }
     }
