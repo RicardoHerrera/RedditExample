@@ -18,13 +18,13 @@ protocol RedditListPresenterProtocol {
     var postsToShow: [Post] { get }
 }
 
-class RedditListPresenter: RedditListPresenterProtocol {
+final class RedditListPresenter: RedditListPresenterProtocol {
 
     let networker: RedditListNetworkerProtocol
     let storage: RedditStorageProtocol
     weak var viewcontroller: RedditListViewControllerProtocol?
     var postsToShow: [Post] = []
-    var paging = 2
+    var paging = 7
     var currentPage = 0
 
     init(networker: RedditListNetworkerProtocol = RedditListNetworker(),
@@ -37,27 +37,35 @@ class RedditListPresenter: RedditListPresenterProtocol {
 
     func getNewPage() {
         viewcontroller?.showLoading()
-        networker.getTop(limit: paging) { [weak self] (posts, error) in
+        networker.getTop(limit: paging) { [weak self] (result) in
             guard let self = self else { return }
-            guard error == nil,
-                let posts = posts else {
-                // Show error in VC
+            switch result {
+            case .failure(let error):
+                DispatchQueue.main.async {
+                    self.viewcontroller?.hideLoading()
+                    self.viewcontroller?.showMessage(title: "Error",
+                    message: error.localizedDescription)
+                    // Here I could do a switch case for error types
+                }
+            case .success(let posts):
+                guard let posts = posts else {
                     DispatchQueue.main.async {
                         self.viewcontroller?.hideLoading()
                         self.viewcontroller?.showMessage(title: "Error",
-                        message: error?.localizedDescription ?? "Ocurrió un error")
+                        message: "Ocurrió un error")
                     }
-                return
-            }
-            // Filter posts with deleted ones
-            let deletedPosts = self.storage.getDeletedPosts()
-            let filtered = posts.filter( { !deletedPosts.contains($0.info.postId) } )
-            self.postsToShow.append(contentsOf: filtered.map( { $0.info } ))
-            DispatchQueue.main.async {
-                //Stop loading
-                self.viewcontroller?.hideLoading()
-                // Reload table view with posts
-                self.viewcontroller?.updateList()
+                    return
+                }
+                // Filter posts with deleted ones
+                let deletedPosts = self.storage.getDeletedPosts()
+                let filtered = posts.filter( { !deletedPosts.contains($0.info.postId) } )
+                self.postsToShow.append(contentsOf: filtered.map( { $0.info } ))
+                DispatchQueue.main.async {
+                    //Stop loading
+                    self.viewcontroller?.hideLoading()
+                    // Reload table view with posts
+                    self.viewcontroller?.updateList()
+                }
             }
         }
     }

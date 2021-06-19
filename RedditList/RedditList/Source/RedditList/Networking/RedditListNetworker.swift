@@ -35,10 +35,17 @@ class RedditListNetworker: RedditListNetworkerProtocol {
         let maxLeftPosts = maxTop - count
         let finalLimit = min(maxLeftPosts, limit)
 
-        var url = "https://www.reddit.com/top/.json"
-        url += "?limit=\(finalLimit)"
-        if !after.isEmpty { url += "&after=\(after)" }
-        var request = URLRequest(url: URL(string: url)!)
+        // Build url components with parameters
+        var components = URLComponents(string: "https://www.reddit.com/top/.json")!
+        var parameters: [String: String] = ["limit": "\(finalLimit)"]
+        if !after.isEmpty {
+            parameters["after"] = after
+        }
+        components.queryItems = parameters.map { (key, value) in
+            URLQueryItem(name: key, value: value)
+        }
+        // Create request
+        var request = URLRequest(url: components.url!)
         request.httpMethod = "GET"
         URLSession.shared.dataTask(with: request) { [weak self] data, response, error in
             guard error == nil,
