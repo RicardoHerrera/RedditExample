@@ -59,7 +59,7 @@
                     <constraint firstItem="0hb-iY-Rwh" firstAttribute="leading" secondItem="naL-6W-QAE" secondAttribute="trailing" constant="10" id="gnk-yt-1Hn"/>
                     <constraint firstItem="naL-6W-QAE" firstAttribute="top" secondItem="lPU-y8-LKD" secondAttribute="top" constant="10" id="iyP-f3-EBo"/>
                     <constraint firstItem="9Hg-er-Scj" firstAttribute="top" relation="greaterThanOrEqual" secondItem="naL-6W-QAE" secondAttribute="bottom" constant="10" id="ohD-Ba-YLN"/>
-                    <constraint firstItem="3IE-LO-oDP" firstAttribute="top" relation="greaterThanOrEqual" secondItem="0hb-iY-Rwh" secondAttribute="bottom" constant="10" id="qbz-Ma-zpO"/>
+                    <constraint firstItem="3IE-LO-oDP" firstAttribute="top" relation="greaterThanOrEqual" secondItem="0hb-iY-Rwh" secondAttribute="bottom" priority="750" constant="10" id="qbz-Ma-zpO"/>
                     <constraint firstItem="0hb-iY-Rwh" firstAttribute="centerY" secondItem="lPU-y8-LKD" secondAttribute="centerY" id="zBu-Vw-TZa"/>
                 </constraints>
             </tableViewCellContentView>
