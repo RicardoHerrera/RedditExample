@@ -14,6 +14,7 @@ protocol RedditListViewControllerProtocol: class {
     func updateList()
     func showMessage(title: String, message: String)
     func deletePost(at index: Int)
+    func presentPostDetail(imageUrl: String)
 }
 
 class RedditListViewController: UIViewController {
@@ -75,6 +76,7 @@ class RedditListViewController: UIViewController {
             }
             // Configure cell
             cell.setupFor(post)
+            cell.delegate = self
             if self.presenter?.isPostRead(postId: post.postId) ?? false {
                 cell.contentView.backgroundColor = .white
             } else {
@@ -161,6 +163,22 @@ extension RedditListViewController: UITableViewDelegate {
             && !refreshControl.isRefreshing
             && activityIndicator.isHidden {
             presenter?.getNewPage()
+        }
+    }
+}
+
+// MARK: - Handle navigation
+extension RedditListViewController {
+    func presentPostDetail(imageUrl: String) {
+        performSegue(withIdentifier: "PostDetail", sender: imageUrl)
+    }
+
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "PostDetail",
+            let imageUrl = sender as? String {
+            if let destinationVC = segue.destination as? PostImageViewController {
+                destinationVC.imageUrl = imageUrl
+            }
         }
     }
 }

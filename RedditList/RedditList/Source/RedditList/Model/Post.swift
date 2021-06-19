@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import UIKit
 
 struct TopList: Decodable {
     let after: String?
@@ -63,6 +64,23 @@ struct Post: Decodable {
     func date() -> String {
         let date: Date = Date(timeIntervalSince1970: timeStamp)
         return timeAgoDisplay(date: date)
+    }
+
+    func hasValidImage() -> Bool {
+        guard let url = NSURL(string: thumbnailURL),
+            UIApplication.shared.canOpenURL(url as URL) else {
+                return false
+        }
+        return true
+    }
+
+    func hasValidFullImage() -> Bool {
+        guard !isVideo,
+            let url = NSURL(string: fullImageURL),
+            UIApplication.shared.canOpenURL(url as URL) else {
+                return false
+        }
+        return true
     }
     
     private func timeAgoDisplay(date: Date) -> String {

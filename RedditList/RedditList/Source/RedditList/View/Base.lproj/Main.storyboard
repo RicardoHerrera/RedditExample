@@ -10,7 +10,7 @@
         <!--Reddit List View Controller-->
         <scene sceneID="tne-QT-ifu">
             <objects>
-                <viewController id="BYZ-38-t0r" customClass="RedditListViewController" customModule="RedditList" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController restorationIdentifier="MainListController" id="BYZ-38-t0r" customClass="RedditListViewController" customModule="RedditList" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -38,6 +38,7 @@
                     <connections>
                         <outlet property="activityIndicator" destination="9kG-uO-CUu" id="hQw-Lx-sQ7"/>
                         <outlet property="tableView" destination="deJ-it-4db" id="YYP-Pp-x8L"/>
+                        <segue destination="WWM-1J-aAC" kind="show" identifier="PostDetail" id="ut8-rU-O5b"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
@@ -47,7 +48,7 @@
         <!--Navigation Controller-->
         <scene sceneID="TOj-sc-Ddu">
             <objects>
-                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="4xj-Me-isX" sceneMemberID="viewController">
+                <navigationController restorationIdentifier="RootNavController" automaticallyAdjustsScrollViewInsets="NO" id="4xj-Me-isX" sceneMemberID="viewController">
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="TGE-bP-kmT">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
@@ -61,6 +62,43 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="xQS-1x-GyF" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="138.40000000000001" y="126.38680659670166"/>
+        </scene>
+        <!--Post Image View Controller-->
+        <scene sceneID="GT3-Wf-3Yf">
+            <objects>
+                <viewController restorationIdentifier="PostImageController" id="WWM-1J-aAC" customClass="PostImageViewController" customModule="RedditList" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="EBe-gz-tIr">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="5mb-e4-gag">
+                                <rect key="frame" x="0.0" y="44" width="375" height="623"/>
+                            </imageView>
+                            <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" style="large" translatesAutoresizingMaskIntoConstraints="NO" id="6Mo-p2-ICg">
+                                <rect key="frame" x="169" y="337" width="37" height="37"/>
+                                <color key="color" systemColor="systemRedColor" red="1" green="0.23137254900000001" blue="0.18823529410000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                            </activityIndicatorView>
+                        </subviews>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                        <constraints>
+                            <constraint firstItem="6Mo-p2-ICg" firstAttribute="centerY" secondItem="5mb-e4-gag" secondAttribute="centerY" id="YHP-wW-tIt"/>
+                            <constraint firstItem="5mb-e4-gag" firstAttribute="top" secondItem="6m9-gm-yBm" secondAttribute="top" id="fjz-lq-X7Z"/>
+                            <constraint firstItem="5mb-e4-gag" firstAttribute="leading" secondItem="6m9-gm-yBm" secondAttribute="leading" id="kTv-26-eOu"/>
+                            <constraint firstItem="6m9-gm-yBm" firstAttribute="trailing" secondItem="5mb-e4-gag" secondAttribute="trailing" id="n7u-Qh-F1a"/>
+                            <constraint firstItem="6m9-gm-yBm" firstAttribute="bottom" secondItem="5mb-e4-gag" secondAttribute="bottom" id="pPA-k2-41N"/>
+                            <constraint firstItem="6Mo-p2-ICg" firstAttribute="centerX" secondItem="5mb-e4-gag" secondAttribute="centerX" id="xcI-DQ-g24"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="6m9-gm-yBm"/>
+                    </view>
+                    <navigationItem key="navigationItem" id="0rV-FM-qM8"/>
+                    <connections>
+                        <outlet property="activityIndicator" destination="6Mo-p2-ICg" id="yhW-uA-H52"/>
+                        <outlet property="imageView" destination="5mb-e4-gag" id="uDC-hE-2O0"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="rEd-yk-VFm" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1822" y="137"/>
         </scene>
     </scenes>
 </document>
