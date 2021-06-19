@@ -15,12 +15,17 @@ final class ImageCache {
     var placeholderImage = UIImage(named: "placeholder")!
     private let cachedImages = NSCache<NSURL, UIImage>()
     private var loadingResponses = [NSURL: [(UIImage?) -> Swift.Void]]()
+    var networker: RedditImageNetworkerProtocol
+
+    init(networker: RedditImageNetworkerProtocol = RedditImageNetworker()) {
+        self.networker = networker
+    }
 
     func image(url: NSURL) -> UIImage? {
         return cachedImages.object(forKey: url)
     }
 
-    func load(url: NSURL, completion: @escaping (UIImage?) -> Swift.Void) {
+    func load(url: NSURL, completion: @escaping (UIImage?) -> Void) {
         // Check for a cached image.
         if let cachedImage = image(url: url) {
             DispatchQueue.main.async {
@@ -28,22 +33,22 @@ final class ImageCache {
             }
             return
         }
-        // Go fetch the image.
-        URLSession.shared.dataTask(with: url as URL) { (data, response, error) in
-            // Check for the error, then data and try to create the image.
-            guard let responseData = data, let image = UIImage(data: responseData),
-                error == nil else {
+        // fetch the image.
+        networker.loadImageFrom(url as URL) { (result) in
+            switch result {
+            case .failure(let error):
+                print("Error downloading image: " + error.localizedDescription)
                 DispatchQueue.main.async { [weak self] in
                     completion(self?.placeholderImage)
                 }
-                return
+            case .success(let image):
+                // Cache the image.
+                self.cachedImages.setObject(image, forKey: url)
+                DispatchQueue.main.async {
+                    completion(image)
+                }
             }
-            // Cache the image.
-            self.cachedImages.setObject(image, forKey: url, cost: responseData.count)
-            DispatchQueue.main.async {
-                completion(image)
-            }
-        }.resume()
+        }
     }
 
 }
