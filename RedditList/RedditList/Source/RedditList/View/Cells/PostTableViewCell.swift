@@ -9,7 +9,7 @@
 import Foundation
 import UIKit
 
-class PostTableViewCell: UITableViewCell {
+final class PostTableViewCell: UITableViewCell {
 
     // MARK: - IBOutlets
     @IBOutlet weak var titleLabel: UILabel!
@@ -26,6 +26,12 @@ class PostTableViewCell: UITableViewCell {
     // MARK: - properties
     weak var delegate: RedditListViewControllerProtocol?
     private var fullImageUrl: String?
+    let tapGesture = UITapGestureRecognizer()
+
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        postImageView.removeGestureRecognizer(tapGesture)
+    }
 
     // MARK: - Config
     func setupFor(_ post: Post) {
@@ -45,7 +51,7 @@ class PostTableViewCell: UITableViewCell {
         postImageView.image = image
     }
 
-    func loadImageFor(_ post: Post) {
+    private func loadImageFor(_ post: Post) {
         guard post.hasValidImage() else {
                 self.postImageView.image = UIImage(named: "placeholder")
                 return
@@ -55,11 +61,10 @@ class PostTableViewCell: UITableViewCell {
         }
     }
 
-    func addActionToImage(post: Post) {
-        guard post.hasValidFullImage() else { return }
-
+    private func addActionToImage(post: Post) {
+        guard post.hasValidImage(),
+            post.hasValidFullImage() else { return }
         postImageView.isUserInteractionEnabled = true
-        let tapGesture = UITapGestureRecognizer()
         tapGesture.addTarget(self, action: #selector(presentPostDetail))
         postImageView.addGestureRecognizer(tapGesture)
     }
