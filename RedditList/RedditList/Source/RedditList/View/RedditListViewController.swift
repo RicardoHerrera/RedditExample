@@ -157,7 +157,9 @@ extension RedditListViewController: UITableViewDelegate {
         let currentOffset = scrollView.contentOffset.y
         let maxOffset = scrollView.contentSize.height - scrollView.frame.size.height
 
-        if maxOffset - currentOffset <= 10.0 && !refreshControl.isRefreshing {
+        if maxOffset - currentOffset <= 10.0
+            && !refreshControl.isRefreshing
+            && activityIndicator.isHidden {
             presenter?.getNewPage()
         }
     }
