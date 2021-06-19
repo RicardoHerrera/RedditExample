@@ -73,8 +73,8 @@ class RedditListViewController: UIViewController {
                 else {
                 fatalError("Error loading cell")
             }
+            // Configure cell
             cell.setupFor(post)
-            cell.selectionStyle = .none
             if self.presenter?.isPostRead(postId: post.postId) ?? false {
                 cell.contentView.backgroundColor = .white
             } else {

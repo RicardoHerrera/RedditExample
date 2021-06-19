@@ -24,11 +24,29 @@ class PostTableViewCell: UITableViewCell {
 
     // MARK: - Config
     func setupFor(_ post: Post) {
+        selectionStyle = .none
         titleLabel.text = post.title
         authorLabel.text = "By " + post.author
-        let prefix = (post.comments == 1) ? "comment" : "comments"
-        commentsLabel.text = "\(post.comments) " + prefix
+        let sufix = (post.comments == 1) ? "comment" : "comments"
+        commentsLabel.text = "\(post.comments) " + sufix
         timeAgoLabel.text = post.date()
+        postImageView.image = UIImage(named: "placeholder")
+        loadImageFor(post)
+    }
+
+    func updatethumbnailWith(image: UIImage) {
+        postImageView.image = image
+    }
+
+    func loadImageFor(_ post: Post) {
+        guard let url = NSURL(string: post.thumbnailURL),
+            UIApplication.shared.canOpenURL(url as URL) else {
+                self.postImageView.image = UIImage(named: "placeholder")
+                return
+        }
+        ImageCache.publicCache.load(url: url) { (image) in
+            self.postImageView.image = image
+        }
     }
 
     // MARK: - Helper
