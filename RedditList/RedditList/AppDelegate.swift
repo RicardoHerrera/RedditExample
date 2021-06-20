@@ -37,26 +37,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 extension AppDelegate {
 
-    // For non-scene-based versions of this app on iOS 13.1 and earlier.
-    func application(_ application: UIApplication, shouldSaveApplicationState coder: NSCoder) -> Bool {
-        return true
-    }
-
-    // For non-scene-based versions of this app on iOS 13.1 and earlier.
-    func application(_ application: UIApplication, shouldRestoreApplicationState coder: NSCoder) -> Bool {
-        return true
-    }
-
-    @available(iOS 13.2, *)
     // For non-scene-based versions of this app on iOS 13.2 and later.
     func application(_ application: UIApplication, shouldSaveSecureApplicationState coder: NSCoder) -> Bool {
         return true
     }
 
-    @available(iOS 13.2, *)
     // For non-scene-based versions of this app on iOS 13.2 and later.
     func application(_ application: UIApplication, shouldRestoreSecureApplicationState coder: NSCoder) -> Bool {
         return true
     }
-
 }

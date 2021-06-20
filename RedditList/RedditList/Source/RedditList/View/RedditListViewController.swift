@@ -17,7 +17,7 @@ protocol RedditListViewControllerProtocol: class {
     func presentPostDetail(imageUrl: String)
 }
 
-class RedditListViewController: UIViewController {
+final class RedditListViewController: UIViewController {
 
     // MARK: - IBOutlets
     @IBOutlet weak var tableView: UITableView!

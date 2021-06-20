@@ -8,7 +8,7 @@
 
 import UIKit
 
-class PostImageViewController: UIViewController {
+final class PostImageViewController: UIViewController {
 
     // MARK: - IBOutlets
     @IBOutlet weak var imageView: UIImageView!
@@ -27,11 +27,22 @@ class PostImageViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         activityIndicator.startAnimating()
-        loadImage()
+    }
+
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        updateUserActivity()
+    }
+
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        // Clear user activity
+        view.window?.windowScene?.userActivity = nil
     }
 
     func loadImage() {
         guard let imageUrl = imageUrl else { return }
+        // TODO: this should be in a presenter.
         ImageCache.publicCache.load(url: NSURL(string: imageUrl)!) { [weak self] (image) in
             self?.activityIndicator.stopAnimating()
             self?.imageView.image = image
@@ -58,5 +69,23 @@ class PostImageViewController: UIViewController {
         alert.addAction(UIAlertAction(title: "Ok",
                                       style: .cancel))
         present(alert, animated: true)
+    }
+}
+
+// MARK: - Restoration
+
+extension PostImageViewController {
+
+    func updateUserActivity() {
+        var currentUserActivity = view.window?.windowScene?.userActivity
+        if currentUserActivity == nil {
+            currentUserActivity = NSUserActivity(activityType: SceneDelegate.MainSceneActivityType())
+        }
+        currentUserActivity?.targetContentIdentifier = imageUrl
+        currentUserActivity?.addUserInfoEntries(from: [SceneDelegate.postUrlImage: imageUrl!])
+        view.window?.windowScene?.userActivity = currentUserActivity
+        view.window?.windowScene?.session.userInfo = [SceneDelegate.productIdentifierKey: imageUrl!]
+        // Update UI
+        loadImage()
     }
 }

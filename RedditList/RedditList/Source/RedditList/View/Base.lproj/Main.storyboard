@@ -10,7 +10,7 @@
         <!--Reddit List View Controller-->
         <scene sceneID="tne-QT-ifu">
             <objects>
-                <viewController restorationIdentifier="MainListController" id="BYZ-38-t0r" customClass="RedditListViewController" customModule="RedditList" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="MainListController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="BYZ-38-t0r" customClass="RedditListViewController" customModule="RedditList" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -48,7 +48,7 @@
         <!--Navigation Controller-->
         <scene sceneID="TOj-sc-Ddu">
             <objects>
-                <navigationController restorationIdentifier="RootNavController" automaticallyAdjustsScrollViewInsets="NO" id="4xj-Me-isX" sceneMemberID="viewController">
+                <navigationController storyboardIdentifier="RootNavController" automaticallyAdjustsScrollViewInsets="NO" useStoryboardIdentifierAsRestorationIdentifier="YES" id="4xj-Me-isX" sceneMemberID="viewController">
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="TGE-bP-kmT">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
@@ -66,7 +66,7 @@
         <!--Post Image View Controller-->
         <scene sceneID="GT3-Wf-3Yf">
             <objects>
-                <viewController restorationIdentifier="PostImageController" id="WWM-1J-aAC" customClass="PostImageViewController" customModule="RedditList" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="PostImageController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="WWM-1J-aAC" customClass="PostImageViewController" customModule="RedditList" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="EBe-gz-tIr">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>

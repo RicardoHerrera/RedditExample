@@ -23,7 +23,7 @@
 	<key>UIApplicationSceneManifest</key>
 	<dict>
 		<key>UIApplicationSupportsMultipleScenes</key>
-		<false/>
+		<true/>
 		<key>UISceneConfigurations</key>
 		<dict>
 			<key>UIWindowSceneSessionRoleApplication</key>
@@ -62,5 +62,9 @@
 	</array>
 	<key>NSPhotoLibraryAddUsageDescription</key>
 	<string>Save image :)</string>
+	<key>NSUserActivityTypes</key>
+	<array>
+		<string>com.ricardo.reddit.mainActivity</string>
+	</array>
 </dict>
 </plist>
