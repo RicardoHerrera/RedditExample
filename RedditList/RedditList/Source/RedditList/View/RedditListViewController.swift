@@ -39,7 +39,7 @@ final class RedditListViewController: UIViewController {
         super.viewDidLoad()
         presenter = RedditListPresenter(viewController: self)
         configureView()
-        presenter?.getNewPage()
+        presenter?.initialLoad()
     }
 
     // MKAR: - ConfigureView

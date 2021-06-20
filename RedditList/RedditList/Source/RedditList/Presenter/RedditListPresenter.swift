@@ -23,12 +23,13 @@ final class RedditListPresenter: RedditListPresenterProtocol {
 
     let networker: RedditListNetworkerProtocol
     var storage: RedditStorageProtocol {
-        return DataModelManager.sharedInstance.storage
+        return dataManager.storage
     }
     weak var viewcontroller: RedditListViewControllerProtocol?
     var postsToShow: [Post] {
-        return DataModelManager.sharedInstance.postToShow
+        return dataManager.postToShow
     }
+    var dataManager = DataModelManager.sharedInstance
     var paging = 7
     var currentPage = 0
 
@@ -39,9 +40,11 @@ final class RedditListPresenter: RedditListPresenterProtocol {
     }
 
     func initialLoad() {
-        if DataModelManager.sharedInstance.postToShow.count == 0
-            && DataModelManager.sharedInstance.currentCount == 0 {
+        if dataManager.postToShow.count == 0
+            && dataManager.currentCount == 0 {
             getNewPage()
+        } else {
+            viewcontroller?.updateList()
         }
     }
 
@@ -69,7 +72,7 @@ final class RedditListPresenter: RedditListPresenterProtocol {
                 // Filter posts with deleted ones
                 let deletedPosts = self.storage.getDeletedPosts()
                 let filtered = posts.filter( { !deletedPosts.contains($0.info.postId) } )
-                DataModelManager.sharedInstance.append(posts: filtered.map( { $0.info } ))
+                self.dataManager.append(posts: filtered.map( { $0.info } ))
                 DispatchQueue.main.async {
                     //Stop loading
                     self.viewcontroller?.hideLoading()
@@ -83,7 +86,7 @@ final class RedditListPresenter: RedditListPresenterProtocol {
     func deletePost(at index: Int) {
         let post = postsToShow[index]
         storage.saveDeletedPost(postId: post.postId)
-        DataModelManager.sharedInstance.removePost(at: index)
+        dataManager.removePost(at: index)
         viewcontroller?.updateList()
     }
 
@@ -91,7 +94,7 @@ final class RedditListPresenter: RedditListPresenterProtocol {
         for post in postsToShow {
             storage.saveDeletedPost(postId: post.postId)
         }
-        DataModelManager.sharedInstance.removeAllPosts()
+        dataManager.removeAllPosts()
         viewcontroller?.updateList()
     }
 
@@ -104,7 +107,7 @@ final class RedditListPresenter: RedditListPresenterProtocol {
     }
 
     func restartPagination() {
-        DataModelManager.sharedInstance.resetValues()
+        dataManager.resetValues()
         storage.resetDeletedPosts()
     }
 }

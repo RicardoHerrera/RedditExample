@@ -14,13 +14,17 @@ class RedditListPresenterTests: XCTestCase {
     var SUT: RedditListPresenter!
     var viewController: MockViewController = MockViewController()
     var network: MockNetwork = MockNetwork()
-    var storage = MockStorage()
+    var storage: MockStorage!
+    var dataModelManager: DataModelManager!
 
     override func setUp() {
         // Put setup code here. This method is called before the invocation of each test method in the class.
         SUT = RedditListPresenter(networker: network,
-                                  storage: storage,
                                   viewController: viewController)
+        storage = MockStorage()
+        dataModelManager = DataModelManager(storage: storage)
+        dataModelManager.dataModel = DataModel()
+        SUT.dataManager = dataModelManager
     }
 
     override func tearDown() {
@@ -33,14 +37,14 @@ class RedditListPresenterTests: XCTestCase {
     }
 
     func testDeletePost() {
-        SUT?.postsToShow = [Post()]
+        dataModelManager.append(posts: [Post()])
         SUT?.deletePost(at: 0)
         XCTAssert(storage.saveDeletedPostCalled, "storage should save deleted item")
         XCTAssert(viewController.updateListCalled, "View controller should upload list")
     }
 
     func testDeleteAllPost() {
-        SUT.postsToShow = [Post(), Post()]
+        dataModelManager.append(posts: [Post(), Post()])
         SUT.deleteAllPosts()
         XCTAssert(storage.saveDeletedPostCalled, "storage should save deleted item")
         XCTAssert(viewController.updateListCalled, "View controller should upload list")
@@ -64,7 +68,7 @@ class RedditListPresenterTests: XCTestCase {
 
     func testRestartPagination() {
         SUT?.restartPagination()
-        XCTAssert(network.resetPaginationCalled, "Network should restart values")
+        XCTAssertEqual(dataModelManager.currentCount, 0, "Network should restart values")
     }
 }
 
@@ -113,10 +117,6 @@ class MockNetwork: RedditListNetworkerProtocol {
     func getTop(limit: Int, completioHandler: @escaping ([Posts]?, Error?) -> Void) {
         completioHandler([], nil)
     }
-
-    func resetPagination() {
-        resetPaginationCalled = true
-    }
 }
 
 class MockStorage: RedditStorageProtocol {
@@ -127,6 +127,8 @@ class MockStorage: RedditStorageProtocol {
     var getDeletedPostsCalled = false
     var resetDeletedPostsCalled = false
     var isPostRead = false
+    var saveStateCalled = false
+    var loadLastStateCalled = false
 
     func saveDeletedPost(postId: String) {
         saveDeletedPostCalled = true
@@ -155,5 +157,14 @@ class MockStorage: RedditStorageProtocol {
 
     func resetDeletedPosts() {
         resetDeletedPostsCalled = true
+    }
+
+    func saveState(dataModel: DataModel) {
+        saveStateCalled = true
+    }
+
+    func loadLastState() -> DataModel? {
+        loadLastStateCalled = true
+        return nil
     }
 }

@@ -15,7 +15,7 @@ final class DataModelManager {
         return instance
     }()
 
-    private var dataModel: DataModel!
+    var dataModel: DataModel!
     var storage: RedditStorageProtocol!
 
     init(storage: RedditStorageProtocol = RedditStorage()) {
@@ -46,11 +46,12 @@ final class DataModelManager {
 
     func saveDataModel() {
         // save in userdefaults
+        storage.saveState(dataModel: dataModel)
     }
 
     func loadDataModel() {
         // load from userdefaults
-        dataModel = DataModel()
+        dataModel = storage.loadLastState() ?? DataModel()
     }
 
     func post(at index: Int) -> Post {
@@ -76,10 +77,9 @@ final class DataModelManager {
     }
 }
 
-struct DataModel {
+struct DataModel: Codable {
 
     var postToShow: [Post] = []
     var after: String = ""
     var currentCount: Int = 0
-
 }
