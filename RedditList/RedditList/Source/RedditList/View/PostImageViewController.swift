@@ -17,6 +17,7 @@ final class PostImageViewController: UIViewController {
             activityIndicator.hidesWhenStopped = true
             activityIndicator.isHidden = false
             activityIndicator.style = .large
+            activityIndicator.startAnimating()
         }
     }
 
@@ -27,17 +28,12 @@ final class PostImageViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         activityIndicator.startAnimating()
+        loadImage()
     }
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         updateUserActivity()
-    }
-
-    override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
-        // Clear user activity
-        view.window?.windowScene?.userActivity = nil
     }
 
     func loadImage() {
@@ -85,7 +81,5 @@ extension PostImageViewController {
         currentUserActivity?.addUserInfoEntries(from: [SceneDelegate.postUrlImage: imageUrl!])
         view.window?.windowScene?.userActivity = currentUserActivity
         view.window?.windowScene?.session.userInfo = [SceneDelegate.productIdentifierKey: imageUrl!]
-        // Update UI
-        loadImage()
     }
 }

@@ -29,7 +29,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         if configure(window: window, session: session, with: userActivity) {
             // Remember this activity for later when this app quits or suspends.
             scene.userActivity = userActivity
-            // Mark this scene's session with this userActivity product identifier so you can update the UI later.
+            // Mark this scene's session with this userActivity imageurl so you can update the UI later.
             if let urlImage = SceneDelegate.imageUrl(for: userActivity) {
                 session.userInfo =
                     [SceneDelegate.productIdentifierKey: urlImage]
