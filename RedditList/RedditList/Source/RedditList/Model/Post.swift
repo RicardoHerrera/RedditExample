@@ -40,7 +40,7 @@ struct Posts: Decodable {
     }
 }
 
-struct Post: Decodable {
+struct Post: Codable {
 
     let postId: String
     let title: String

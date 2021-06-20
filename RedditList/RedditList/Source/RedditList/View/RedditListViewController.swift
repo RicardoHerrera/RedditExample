@@ -37,9 +37,10 @@ final class RedditListViewController: UIViewController {
     // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
+        navigationController?.delegate = self
         presenter = RedditListPresenter(viewController: self)
         configureView()
-        presenter?.getNewPage()
+        presenter?.initialLoad()
     }
 
     // MKAR: - ConfigureView
@@ -179,6 +180,19 @@ extension RedditListViewController {
             if let destinationVC = segue.destination as? PostImageViewController {
                 destinationVC.imageUrl = imageUrl
             }
+        }
+    }
+}
+
+// MARK: - UINavigationControllerDelegate
+extension RedditListViewController: UINavigationControllerDelegate {
+
+    func navigationController(_ navigationController: UINavigationController,
+                              didShow viewController: UIViewController,
+                              animated: Bool) {
+        if viewController == self && animated == true {
+            view.window?.windowScene?.userActivity = nil
+            view.window?.windowScene?.session.scene?.userActivity = nil
         }
     }
 }

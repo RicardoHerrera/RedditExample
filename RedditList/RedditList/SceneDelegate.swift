@@ -29,7 +29,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         if configure(window: window, session: session, with: userActivity) {
             // Remember this activity for later when this app quits or suspends.
             scene.userActivity = userActivity
-            // Mark this scene's session with this userActivity product identifier so you can update the UI later.
+            // Mark this scene's session with this userActivity imageurl so you can update the UI later.
             if let urlImage = SceneDelegate.imageUrl(for: userActivity) {
                 session.userInfo =
                     [SceneDelegate.productIdentifierKey: urlImage]
@@ -79,6 +79,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     func sceneWillResignActive(_ scene: UIScene) {
         // Called when the scene will move from an active state to an inactive state.
         // This may occur due to temporary interruptions (ex. an incoming phone call).
+        DataModelManager.sharedInstance.saveDataModel()
         if let userActivity = window?.windowScene?.userActivity {
             userActivity.resignCurrent()
         }
@@ -90,6 +91,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         // Called as the scene transitions from the foreground to the background.
         // Use this method to save data, release shared resources, and store enough scene-specific state information
         // to restore the scene back to its current state.
+        DataModelManager.sharedInstance.saveDataModel()
     }
 
     func scene(_ scene: UIScene, continue userActivity: NSUserActivity) {
