@@ -104,6 +104,10 @@ class MockViewController: RedditListViewControllerProtocol {
 
 class MockNetwork: RedditListNetworkerProtocol {
 
+    func getTop(limit: Int, completioHandler: @escaping (Result<[Posts]?, NetworkError>) -> Void) {
+        completioHandler(.success([]))
+    }
+
     var resetPaginationCalled = false
 
     func getTop(limit: Int, completioHandler: @escaping ([Posts]?, Error?) -> Void) {

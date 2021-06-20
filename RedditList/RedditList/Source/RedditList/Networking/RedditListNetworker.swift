@@ -17,13 +17,16 @@ enum NetworkError: Error {
 
 protocol RedditListNetworkerProtocol {
     func getTop(limit: Int, completioHandler: @escaping (Result<[Posts]?, NetworkError>) -> Void)
-    func resetPagination()
 }
 
 class RedditListNetworker: RedditListNetworkerProtocol {
 
-    private var after: String = ""
-    private var count = 0
+    private var after: String {
+        return DataModelManager.sharedInstance.after
+    }
+    private var count: Int {
+        return  DataModelManager.sharedInstance.currentCount
+    }
     private var maxTop = 50
 
     func getTop(limit: Int = 10, completioHandler: @escaping (Result<[Posts]?, NetworkError>) -> Void) {
@@ -47,7 +50,7 @@ class RedditListNetworker: RedditListNetworkerProtocol {
         // Create request
         var request = URLRequest(url: components.url!)
         request.httpMethod = "GET"
-        URLSession.shared.dataTask(with: request) { [weak self] data, response, error in
+        URLSession.shared.dataTask(with: request) { data, response, error in
             guard error == nil,
                 let data = data,
                 let response = response as? HTTPURLResponse,
@@ -58,9 +61,9 @@ class RedditListNetworker: RedditListNetworkerProtocol {
 
             if let topList = try? JSONDecoder().decode(TopList.self, from: data) {
                 // we have good data – go back to the main thread
-                self?.after = topList.after ?? ""
+                DataModelManager.sharedInstance.after = topList.after ?? ""
                 let posts = topList.posts
-                self?.count += posts.count
+                DataModelManager.sharedInstance.currentCount += posts.count
                 completioHandler(.success(posts))
                 // everything is good, so we can exit
                 return
@@ -69,10 +72,5 @@ class RedditListNetworker: RedditListNetworkerProtocol {
                 return
             }
         }.resume()
-    }
-
-    func resetPagination() {
-        after = ""
-        count = 0
     }
 }

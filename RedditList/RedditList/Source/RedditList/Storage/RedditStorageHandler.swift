@@ -11,6 +11,7 @@ import Foundation
 enum StorageKeys: String {
     case deleted
     case read
+    case state
 }
 
 protocol RedditStorageProtocol { // Use user defaults
@@ -61,6 +62,16 @@ class RedditStorage: RedditStorageProtocol {
     func resetDeletedPosts() {
         let userDefaults = UserDefaults.standard
         userDefaults.set([], forKey: StorageKeys.deleted.rawValue)
+    }
+
+    func saveState(datamodel: DataModel) {
+        let userDefaults = UserDefaults.standard
+        userDefaults.set(datamodel, forKey: StorageKeys.state.rawValue)
+    }
+
+    func loadLastState() -> DataModel? {
+        let userDefaults = UserDefaults.standard
+        return userDefaults.object(forKey: StorageKeys.state.rawValue) as? DataModel
     }
 }
 
