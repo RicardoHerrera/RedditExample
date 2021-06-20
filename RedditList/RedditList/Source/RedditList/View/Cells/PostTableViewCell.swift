@@ -12,11 +12,19 @@ import UIKit
 final class PostTableViewCell: UITableViewCell {
 
     // MARK: - IBOutlets
-    @IBOutlet weak var titleLabel: UILabel!
-    @IBOutlet weak var authorLabel: UILabel!
-    @IBOutlet weak var commentsLabel: UILabel!
-    @IBOutlet weak var timeAgoLabel: UILabel!
-    @IBOutlet weak var postImageView: UIImageView! {
+    @IBOutlet private weak var titleLabel: UILabel!
+    @IBOutlet private weak var authorLabel: UILabel! {
+        didSet {
+            authorLabel.textColor = UIColor(red: 252.0/255, green: 44.0/255, blue: 7.0/255, alpha: 1)
+        }
+    }
+    @IBOutlet private weak var commentsLabel: UILabel! {
+        didSet {
+            commentsLabel.textColor = UIColor(red: 252.0/255, green: 44.0/255, blue: 7.0/255, alpha: 1)
+        }
+    }
+    @IBOutlet private weak var timeAgoLabel: UILabel!
+    @IBOutlet private weak var postImageView: UIImageView! {
         didSet {
             postImageView.image = UIImage(named: "placeholder")
             postImageView.isUserInteractionEnabled = false
@@ -49,6 +57,14 @@ final class PostTableViewCell: UITableViewCell {
 
     func updatethumbnailWith(image: UIImage) {
         postImageView.image = image
+    }
+
+    func configureAsRead(isRead: Bool) {
+        if isRead {
+            contentView.backgroundColor = .white
+        } else {
+            contentView.backgroundColor = UIColor(red: 72.0/255, green: 146.0/255, blue: 254.0/255, alpha: 1)
+        }
     }
 
     private func loadImageFor(_ post: Post) {

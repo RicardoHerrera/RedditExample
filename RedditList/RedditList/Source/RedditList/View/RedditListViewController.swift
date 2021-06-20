@@ -30,7 +30,7 @@ final class RedditListViewController: UIViewController {
     }
 
     // MARK: - properties
-    var presenter: RedditListPresenterProtocol?
+    var presenter: RedditListPresenterProtocol!
     var refreshControl = UIRefreshControl()
     var datasource: PostDiffableDataSource!
 
@@ -78,11 +78,8 @@ final class RedditListViewController: UIViewController {
             // Configure cell
             cell.setupFor(post)
             cell.delegate = self
-            if self.presenter?.isPostRead(postId: post.postId) ?? false {
-                cell.contentView.backgroundColor = .white
-            } else {
-                cell.contentView.backgroundColor = .magenta
-            }
+            cell.configureAsRead(
+                isRead: self.presenter.isPostRead(postId: post.postId))
             return cell
         })
         // TODO: Find a better name e.g. uidelegate vcdelegate (?) argh..
