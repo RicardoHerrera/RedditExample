@@ -78,8 +78,9 @@ extension PostImageViewController {
             currentUserActivity = NSUserActivity(activityType: SceneDelegate.MainSceneActivityType())
         }
         currentUserActivity?.targetContentIdentifier = imageUrl
-        currentUserActivity?.addUserInfoEntries(from: [SceneDelegate.postUrlImage: imageUrl!])
+        currentUserActivity?.addUserInfoEntries(from: [SceneDelegate.postUrlImage: imageUrl!,
+                                                       SceneDelegate.targetKey: SceneDelegate.postImageContentIdentifier])
         view.window?.windowScene?.userActivity = currentUserActivity
-        view.window?.windowScene?.session.userInfo = [SceneDelegate.productIdentifierKey: imageUrl!]
+        view.window?.windowScene?.session.userInfo = [SceneDelegate.valueToRestoreKey: imageUrl!]
     }
 }

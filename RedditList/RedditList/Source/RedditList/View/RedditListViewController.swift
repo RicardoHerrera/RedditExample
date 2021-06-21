@@ -30,9 +30,11 @@ final class RedditListViewController: UIViewController {
     }
 
     // MARK: - properties
+    var isFirstLoad = true
     var presenter: RedditListPresenterProtocol!
     var refreshControl = UIRefreshControl()
     var datasource: PostDiffableDataSource!
+    var tableViewPos: Double = 0
 
     // MARK: - Lifecycle
     override func viewDidLoad() {
@@ -67,6 +69,7 @@ final class RedditListViewController: UIViewController {
         tableView.register(postTableViewCell,
                            forCellReuseIdentifier: PostTableViewCell.identifier())
         tableView.rowHeight = UITableView.automaticDimension
+        tableView.estimatedRowHeight = 120
         // Handle datasource
         datasource = PostDiffableDataSource(tableView: tableView,
                                             cellProvider: { [weak self] (tableView, indexPath, post) -> UITableViewCell? in
@@ -92,7 +95,15 @@ final class RedditListViewController: UIViewController {
         snapshot.appendSections([0])
         snapshot.appendItems(presenter.postsToShow)
 
-        datasource.apply(snapshot, animatingDifferences: true)
+        datasource.apply(snapshot, animatingDifferences: true) { [weak self] in
+            guard let self = self else { return }
+            if self.isFirstLoad {
+                self.tableView.layoutIfNeeded()
+                self.tableView.setContentOffset(CGPoint(x:0, y: self.tableViewPos), animated: false)
+                self.isFirstLoad.toggle()
+            }
+            self.updateUserActivity()
+        }
     }
 
     // MARK: - UserInteraction
@@ -156,12 +167,15 @@ extension RedditListViewController: UITableViewDelegate {
     func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
         let currentOffset = scrollView.contentOffset.y
         let maxOffset = scrollView.contentSize.height - scrollView.frame.size.height
-
         if maxOffset - currentOffset <= 10.0
             && !refreshControl.isRefreshing
             && activityIndicator.isHidden {
             presenter?.getNewPage()
         }
+    }
+
+    func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
+        updateUserActivity()
     }
 }
 
@@ -181,15 +195,19 @@ extension RedditListViewController {
     }
 }
 
-// MARK: - UINavigationControllerDelegate
-extension RedditListViewController: UINavigationControllerDelegate {
+// MARK: - Restoration
 
-    func navigationController(_ navigationController: UINavigationController,
-                              didShow viewController: UIViewController,
-                              animated: Bool) {
-        if viewController == self && animated == true {
-            view.window?.windowScene?.userActivity = nil
-            view.window?.windowScene?.session.scene?.userActivity = nil
+extension RedditListViewController {
+
+    func updateUserActivity() {
+        var currentUserActivity = view.window?.windowScene?.userActivity
+        if currentUserActivity == nil {
+            currentUserActivity = NSUserActivity(activityType: SceneDelegate.MainSceneActivityType())
         }
+        currentUserActivity?.targetContentIdentifier = SceneDelegate.listContentIdentifier
+        currentUserActivity?.addUserInfoEntries(from: [SceneDelegate.tableViewPos: tableView.contentOffset.y,
+                                                       SceneDelegate.targetKey: SceneDelegate.listContentIdentifier])
+        view.window?.windowScene?.userActivity = currentUserActivity
+        view.window?.windowScene?.session.userInfo = [SceneDelegate.valueToRestoreKey: tableView.contentOffset.y]
     }
 }

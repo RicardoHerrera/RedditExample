@@ -13,7 +13,11 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     var window: UIWindow?
     static let storyboardName = "Main"
     static let postUrlImage = "urlImage" // post url image to load
-    static let productIdentifierKey = "com.ricardo.reddit.RedditList"
+    static let valueToRestoreKey = "com.ricardo.reddit.RedditList"
+    static let listContentIdentifier = "mainList"
+    static let postImageContentIdentifier = "ImageViewController"
+    static let tableViewPos = "tableViewPos"
+    static let targetKey = "targetRestore"
 
     // Activity type for restoring this scene (loaded from the plist).
     static let MainSceneActivityType = { () -> String in
@@ -29,11 +33,6 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         if configure(window: window, session: session, with: userActivity) {
             // Remember this activity for later when this app quits or suspends.
             scene.userActivity = userActivity
-            // Mark this scene's session with this userActivity imageurl so you can update the UI later.
-            if let urlImage = SceneDelegate.imageUrl(for: userActivity) {
-                session.userInfo =
-                    [SceneDelegate.productIdentifierKey: urlImage]
-            }
         } else {
             print("Failed to restore scene from \(userActivity)")
         }
@@ -47,21 +46,34 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             // Present PostImageViewController with imageUrl to load.
             let storyboard = UIStoryboard(name: SceneDelegate.storyboardName, bundle: .main)
 
-            guard let postImageViewController =
-                storyboard.instantiateViewController(withIdentifier: "PostImageController")
-                    as? PostImageViewController else { return false }
-
             if let userInfo = activity.userInfo {
-                // get imageUrl from the userInfo.
-                if let imageUrl = userInfo[SceneDelegate.postUrlImage] as? String {
-                    postImageViewController.imageUrl = imageUrl
+                // If should restore main list
+                if SceneDelegate.listContentIdentifier == userInfo[SceneDelegate.targetKey] as? String {
+                    if let tablePos = userInfo[SceneDelegate.tableViewPos] as? Double {
+                        guard let nav = window?.rootViewController as? UINavigationController,
+                              let listViewController = nav.viewControllers.first as? RedditListViewController else {
+                            return false
+                        }
+                        listViewController.tableViewPos = tablePos
+                        return true
+                    }
+                } else {
+                    // Restore postImageVC
+                    guard let postImageViewController =
+                        storyboard.instantiateViewController(withIdentifier: "PostImageController")
+                            as? PostImageViewController else { return false }
+                    // get imageUrl from the userInfo.
+                    if let imageUrl = userInfo[SceneDelegate.postUrlImage] as? String {
+                        postImageViewController.imageUrl = imageUrl
+                    }
+                    // Push the postImage view controller.
+                    if let navigationController = window?.rootViewController as? UINavigationController {
+                        navigationController.pushViewController(postImageViewController, animated: false)
+                    }
+                    return true
                 }
-                // Push the postImage view controller.
-                if let navigationController = window?.rootViewController as? UINavigationController {
-                    navigationController.pushViewController(postImageViewController, animated: false)
-                }
-                return true
             }
+
         }
         return false
     }
