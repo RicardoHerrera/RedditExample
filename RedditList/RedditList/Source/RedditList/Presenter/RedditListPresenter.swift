@@ -31,7 +31,6 @@ final class RedditListPresenter: RedditListPresenterProtocol {
     }
     var dataManager = DataModelManager.sharedInstance
     var paging = 7
-    var currentPage = 0
 
     init(networker: RedditListNetworkerProtocol = RedditListNetworker(),
          viewController: RedditListViewControllerProtocol) {
@@ -56,8 +55,15 @@ final class RedditListPresenter: RedditListPresenterProtocol {
             case .failure(let error):
                 DispatchQueue.main.async {
                     self.viewcontroller?.hideLoading()
+                    var message = ""
+                    switch error {
+                    case .maxPostReached:
+                        message = "Max 50 top reached"
+                    default:
+                        message = error.localizedDescription
+                    }
                     self.viewcontroller?.showMessage(title: "Error",
-                    message: error.localizedDescription)
+                    message: message)
                     // Here I could do a switch case for error types
                 }
             case .success(let posts):

@@ -15,12 +15,12 @@ final class PostTableViewCell: UITableViewCell {
     @IBOutlet private weak var titleLabel: UILabel!
     @IBOutlet private weak var authorLabel: UILabel! {
         didSet {
-            authorLabel.textColor = UIColor(red: 252.0/255, green: 44.0/255, blue: 7.0/255, alpha: 1)
+            authorLabel.textColor = CustomColor.primary
         }
     }
     @IBOutlet private weak var commentsLabel: UILabel! {
         didSet {
-            commentsLabel.textColor = UIColor(red: 252.0/255, green: 44.0/255, blue: 7.0/255, alpha: 1)
+            commentsLabel.textColor = CustomColor.primary
         }
     }
     @IBOutlet private weak var timeAgoLabel: UILabel!
@@ -30,7 +30,8 @@ final class PostTableViewCell: UITableViewCell {
             postImageView.isUserInteractionEnabled = false
         }
     }
-
+    @IBOutlet private weak var imageWidthConstraint: NSLayoutConstraint!
+    
     // MARK: - properties
     weak var delegate: RedditListViewControllerProtocol?
     private var fullImageUrl: String?
@@ -39,6 +40,10 @@ final class PostTableViewCell: UITableViewCell {
     override func prepareForReuse() {
         super.prepareForReuse()
         postImageView.removeGestureRecognizer(tapGesture)
+        postImageView.isHidden = false
+        timeAgoLabel.textColor = .black
+        configureAsRead(isRead: false)
+        imageWidthConstraint.constant = 115
     }
 
     // MARK: - Config
@@ -62,15 +67,19 @@ final class PostTableViewCell: UITableViewCell {
     func configureAsRead(isRead: Bool) {
         if isRead {
             contentView.backgroundColor = .white
+            timeAgoLabel.textColor = CustomColor.Secondary
+
         } else {
-            contentView.backgroundColor = UIColor(red: 72.0/255, green: 146.0/255, blue: 254.0/255, alpha: 1)
+            contentView.backgroundColor = CustomColor.Secondary
+            timeAgoLabel.textColor = .black
         }
     }
 
     private func loadImageFor(_ post: Post) {
         guard post.hasValidImage() else {
-                self.postImageView.image = UIImage(named: "placeholder")
-                return
+            postImageView.isHidden = true
+            imageWidthConstraint.constant = 0
+            return
         }
         ImageCache.publicCache.load(url: NSURL(string: post.thumbnailURL)!) { (image) in
             self.postImageView.image = image
@@ -95,4 +104,9 @@ final class PostTableViewCell: UITableViewCell {
     class func identifier() -> String {
         return "PostTableViewCell"
     }
+}
+
+enum CustomColor {
+    static let primary = UIColor(named: "Primary")
+    static let Secondary = UIColor(named: "Secondary")
 }

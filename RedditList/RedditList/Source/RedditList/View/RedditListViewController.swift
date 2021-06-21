@@ -146,8 +146,8 @@ extension RedditListViewController: UITableViewDelegate {
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-        let cell = tableView.cellForRow(at: indexPath)
-        cell?.contentView.backgroundColor = .white
+        let cell = tableView.cellForRow(at: indexPath) as! PostTableViewCell
+        cell.configureAsRead(isRead: true)
         guard let post = datasource.itemIdentifier(for: indexPath),
             let presenter = self.presenter else { return }
         presenter.markAsRead(postId: post.postId)

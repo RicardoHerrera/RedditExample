@@ -68,6 +68,7 @@
             <connections>
                 <outlet property="authorLabel" destination="d9H-Ey-co5" id="QAR-au-wjX"/>
                 <outlet property="commentsLabel" destination="9Hg-er-Scj" id="1hC-eM-5Ox"/>
+                <outlet property="imageWidthConstraint" destination="kmY-SP-5G1" id="e4k-2G-nVm"/>
                 <outlet property="postImageView" destination="0hb-iY-Rwh" id="wJ9-6p-fCi"/>
                 <outlet property="timeAgoLabel" destination="3IE-LO-oDP" id="pQJ-SS-AAf"/>
                 <outlet property="titleLabel" destination="naL-6W-QAE" id="xph-7b-Gry"/>
