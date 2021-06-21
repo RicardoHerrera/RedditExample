@@ -39,7 +39,6 @@ final class RedditListViewController: UIViewController {
     // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        navigationController?.delegate = self
         presenter = RedditListPresenter(viewController: self)
         configureView()
         presenter?.initialLoad()
