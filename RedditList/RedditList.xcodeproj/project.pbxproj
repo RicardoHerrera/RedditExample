@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		C5072B1826802F2F001F1AFB /* ModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5072B1726802F2F001F1AFB /* ModelTests.swift */; };
+		C5072B1D2680305C001F1AFB /* TopList.json in Resources */ = {isa = PBXBuildFile; fileRef = C5072B1C2680305C001F1AFB /* TopList.json */; };
 		C51FD7B3267B1964005F4F17 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C51FD7B2267B1964005F4F17 /* AppDelegate.swift */; };
 		C51FD7B5267B1964005F4F17 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C51FD7B4267B1964005F4F17 /* SceneDelegate.swift */; };
 		C51FD7B7267B1964005F4F17 /* RedditListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C51FD7B6267B1964005F4F17 /* RedditListViewController.swift */; };
@@ -39,6 +41,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		C5072B1726802F2F001F1AFB /* ModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelTests.swift; sourceTree = "<group>"; };
+		C5072B1C2680305C001F1AFB /* TopList.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = TopList.json; sourceTree = "<group>"; };
 		C51FD7AF267B1964005F4F17 /* RedditList.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RedditList.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		C51FD7B2267B1964005F4F17 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		C51FD7B4267B1964005F4F17 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -82,6 +86,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		C5072B1B26803051001F1AFB /* MockFiles */ = {
+			isa = PBXGroup;
+			children = (
+				C5072B1C2680305C001F1AFB /* TopList.json */,
+			);
+			path = MockFiles;
+			sourceTree = "<group>";
+		};
 		C51FD7A6267B1964005F4F17 = {
 			isa = PBXGroup;
 			children = (
@@ -116,9 +128,11 @@
 		C51FD7C8267B1966005F4F17 /* RedditListTests */ = {
 			isa = PBXGroup;
 			children = (
+				C5072B1B26803051001F1AFB /* MockFiles */,
 				C51FD7C9267B1966005F4F17 /* RedditListTests.swift */,
 				C51FD7CB267B1966005F4F17 /* Info.plist */,
 				C52FBBEE267DC5670010BEF4 /* RedditListPresenterTests.swift */,
+				C5072B1726802F2F001F1AFB /* ModelTests.swift */,
 			);
 			path = RedditListTests;
 			sourceTree = "<group>";
@@ -291,6 +305,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C5072B1D2680305C001F1AFB /* TopList.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -321,6 +336,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C5072B1826802F2F001F1AFB /* ModelTests.swift in Sources */,
 				C52FBBEF267DC5670010BEF4 /* RedditListPresenterTests.swift in Sources */,
 				C51FD7CA267B1966005F4F17 /* RedditListTests.swift in Sources */,
 			);
